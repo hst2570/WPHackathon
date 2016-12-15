@@ -96,7 +96,7 @@ public class AeroTest {
 
     @Test
     public void readFile(){
-        Path path = Paths.get("C:/Users/SungTae/Desktop/wp/wpc_10_10000.txt");
+        Path path = Paths.get("/home/seong/다운로드/wpc_10_10000.txt");
 
         try {
             BufferedReader in = new BufferedReader(new FileReader(String.valueOf(path)));
