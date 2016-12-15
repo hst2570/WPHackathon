@@ -3,7 +3,12 @@ import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.policy.*;
+import models.Model;
 import org.junit.Test;
+import org.msgpack.MessagePack;
+import org.msgpack.template.Templates;
+import org.msgpack.type.Value;
+import org.msgpack.unpacker.Converter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +18,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -94,16 +100,16 @@ public class AeroTest {
         br.close();
     }
 
-    @Test
+//    @Test
     public void readFile(){
         Path path = Paths.get("/home/seong/다운로드/wpc_10_10000.txt");
 
         try {
             BufferedReader in = new BufferedReader(new FileReader(String.valueOf(path)));
             String s;
+            HashMap<String, Model> data = new HashMap<>();
 
             while ((s = in.readLine()) != null) {
-                if(s.contains("v1"))
                 System.out.println(s);
             }
             in.close();
@@ -111,5 +117,10 @@ public class AeroTest {
             System.err.println(e); // 에러가 있다면 메시지 출력
             System.exit(1);
         }
+    }
+
+    @Test
+    public void testMsgPack() throws IOException {
+
     }
 }

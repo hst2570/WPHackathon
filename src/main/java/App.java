@@ -3,37 +3,41 @@
  * Created by SungTae on 2016-12-15.
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import org.msgpack.MessagePack;
+import org.msgpack.template.Templates;
+import org.msgpack.type.Value;
+import org.msgpack.unpacker.Converter;
+
 import java.io.IOException;
-import java.nio.charset.Charset;
-//import java.nio.file.Files;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App {
 
     public static void main(String[] args) throws IOException {
+// Create serialize objects.
+        List<String> src = new ArrayList<String>();
+        src.add("msgpack");
+        src.add("kumofs");
+        src.add("viver");
 
-//        Path path = Paths.get("tmp_data.txt");
-//        Stream<String> stream;
-//
-//        // Files.lines() 메소드 이용
-//        stream = Files.lines(path, Charset.defaultCharset());
-//        stream.forEach(System.out::println);
-//        System.out.println();
-//
-//        // BufferedReader의 lines() 메소드 이용
-//        File file = path.toFile();
-//        FileReader fileReader = new FileReader(file);
-//        BufferedReader br = new BufferedReader(fileReader);
-//        stream = br.lines();
-//        stream.forEach(System.out::println);
-//
-//        stream.close();
-//        br.close();
+        MessagePack msgpack = new MessagePack();
+// Serialize
+        byte[] raw = msgpack.write(src);
+
+// Deserialize directly using a template
+        List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
+        System.out.println(dst1.get(0));
+        System.out.println(dst1.get(1));
+        System.out.println(dst1.get(2));
+
+// Or, Deserialze to Value then convert type.
+        Value dynamic = msgpack.read(raw);
+        List<String> dst2 = new Converter(dynamic)
+                .read(Templates.tList(Templates.TString));
+        System.out.println(dst2.get(0));
+        System.out.println(dst2.get(1));
+        System.out.println(dst2.get(2));
 
     }
 }
