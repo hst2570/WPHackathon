@@ -32,6 +32,7 @@ public class AeroTest {
 
     private Path wp = Paths.get("C:/Users/SungTae/Desktop/wp/wpc_10_10000.txt");
     private Path home = Paths.get("/home/seong/다운로드/wpc_10_10000.txt");
+
 //    @Test
     public void join(){
         ClientPolicy cPolicy = new ClientPolicy();
@@ -39,7 +40,7 @@ public class AeroTest {
         this.client = new AerospikeClient(cPolicy, "10.3.10.106", 3000);
     }
 
-    @Test
+//    @Test
     public void setData() {
         this.join();
         String username = "sthwang";
@@ -52,10 +53,14 @@ public class AeroTest {
             // Write record
             WritePolicy wPolicy = new WritePolicy();
             wPolicy.recordExistsAction = RecordExistsAction.UPDATE;
+            List<String> test = new ArrayList<>();
+            test.add("asd");
+            test.add("asdd");
+            test.add("asddd");
 
             key = new Key(sDbName, sTable, username);
-            Bin bin1 = new Bin("username", username);
-            Bin bin2 = new Bin("password", bin1);
+            Bin bin1 = new Bin("username", test);
+            Bin bin2 = new Bin("password", password);
 
             System.out.println(key);
             System.out.println(bin1);
@@ -79,7 +84,7 @@ public class AeroTest {
         System.out.println(key);
         Record record = client.get(policy, key);
 
-        System.out.println(record.bins);
+        System.out.println(record.bins.get("username"));
     }
 
 //    @Test
@@ -108,11 +113,11 @@ public class AeroTest {
         // Create serialize objects.
         BufferedReader in = new BufferedReader(new FileReader(String.valueOf(wp)));
 
-        List<String> src = new ArrayList<String>();
+        Map<String, String> src = new HashMap<>();
 
         String s;
         while ((s = in.readLine()) != null) {
-            src.add(s);
+            src.put(s, s);
         }
 
         MessagePack msgpack = new MessagePack();
@@ -121,12 +126,12 @@ public class AeroTest {
 
 
         // Deserialize directly using a template
-        List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
-
-        Iterator iterator = dst1.iterator();
-
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
+//        List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
+//
+//        Iterator iterator = dst1.iterator();
+//
+//        while (iterator.hasNext()) {
+//            System.out.println(iterator.next());
+//        }
     }
 }
