@@ -6,23 +6,21 @@ import com.aerospike.client.policy.Policy;
 import com.aerospike.client.policy.QueryPolicy;
 import org.junit.Test;
 import org.msgpack.MessagePack;
+import org.msgpack.template.Templates;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by SungTae on 2016-12-16.
  */
 public class ParseTest {
 
-    private Path wp = Paths.get("C:/Users/SungTae/Desktop/wp/wpc_10_10000.txt");
+    private Path wp = Paths.get("C:/Users/SungTae/Desktop/wp/sample.txt");
     private Path home = Paths.get("/home/seong/다운로드/wpc_10_10000.txt");
     private AerospikeClient client;
 
@@ -70,6 +68,7 @@ public class ParseTest {
             if(data.get(i).equals("")){
                 continue;
             }
+            byte[] raw = new byte[0];
 
             String[] dd = getParse(data.get(i+2));
             oaid.add(data.get(i));
@@ -82,9 +81,10 @@ public class ParseTest {
 
                 tmp.put(dd[1].substring(3), data.get(i+1));
 
-                byte[] raw = msgpack.write(tmp);
+                raw = msgpack.write(tmp);
 
 //                setAeroData(data.get(i), raw);
+//                System.out.println(tmp);
             }
 
             if(EVENT2.contains(dd[0].substring(3))){
@@ -121,13 +121,21 @@ public class ParseTest {
                 i1List.put(detail[2].substring(3), il); // 상품 id
                 tmp.put(dd[1].substring(3), i1List);
 
-                byte[] raw = msgpack.write(tmp);
+                raw = msgpack.write(tmp);
 
 //                setAeroData(data.get(i), raw);
 //                System.out.println(tmp);
 //                System.out.println(i1List);
 //                System.out.println(il);
             }
+// Deserialize directly using a template
+//        List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
+//
+//        Iterator iterator = dst1.iterator();
+//
+//        while (iterator.hasNext()) {
+//            System.out.println(iterator.next());
+//        }
         }
     }
 
@@ -146,86 +154,86 @@ public class ParseTest {
         System.out.println(record.bins.get("username"));
     }
 
-    private String[] getDetailData(String[] s) {
-        String[] dd = s;
+    private String[] getDetailData(String[] event2Data) {
+        String[] tmpDatas = event2Data;
         String tmp;
 
-        for(int i = 2; i < dd.length; i++){
-            if(dd[i].contains("i1=")){
-                tmp = dd[2];
-                dd[2] = dd[i];
-                dd[i] = tmp;
+        for(int i = 2; i < tmpDatas.length; i++){
+            if(tmpDatas[i].contains("i1=")){
+                tmp = tmpDatas[2];
+                tmpDatas[2] = tmpDatas[i];
+                tmpDatas[i] = tmp;
                 break;
             }
 
-            if(i == dd.length-1 && !dd[i].contains("i1=")){
-                dd[2] = "";
+            if(i == tmpDatas.length-1 && !tmpDatas[i].contains("i1=")){
+                tmpDatas[2] = "";
             }
         }
 
-        for(int i = 3; i < dd.length; i++){
-            if(dd[i].contains("p1=")){
-                tmp = dd[3];
-                dd[3] = dd[i];
-                dd[i] = tmp;
+        for(int i = 3; i < tmpDatas.length; i++){
+            if(tmpDatas[i].contains("p1=")){
+                tmp = tmpDatas[3];
+                tmpDatas[3] = tmpDatas[i];
+                tmpDatas[i] = tmp;
 
                 break;
             }
-            if(i == dd.length-1 && !dd[i].contains("p1=")){
-                dd[3] = "";
+            if(i == tmpDatas.length-1 && !tmpDatas[i].contains("p1=")){
+                tmpDatas[3] = "";
             }
         }
 
-        for(int i = 4; i < dd.length; i++){
-            if(dd[i].contains("q1=")){
-                tmp = dd[4];
-                dd[4] = dd[i];
-                dd[i] = tmp;
+        for(int i = 4; i < tmpDatas.length; i++){
+            if(tmpDatas[i].contains("q1=")){
+                tmp = tmpDatas[4];
+                tmpDatas[4] = tmpDatas[i];
+                tmpDatas[i] = tmp;
                 break;
             }
 
-            if(i == dd.length-1 && !dd[i].contains("q1=")){
-                dd[4] = "";
+            if(i == tmpDatas.length-1 && !tmpDatas[i].contains("q1=")){
+                tmpDatas[4] = "";
             }
         }
 
-        for(int i = 5; i < dd.length; i++){
-            if(dd[i].contains("t1=")){
-                tmp = dd[5];
-                dd[5] = dd[i];
-                dd[i] = tmp;
+        for(int i = 5; i < tmpDatas.length; i++){
+            if(tmpDatas[i].contains("t1=")){
+                tmp = tmpDatas[5];
+                tmpDatas[5] = tmpDatas[i];
+                tmpDatas[i] = tmp;
                 break;
             }
-            if(i == dd.length-1 && !dd[i].contains("t1=")){
-                dd[5] = "";
+            if(i == tmpDatas.length-1 && !tmpDatas[i].contains("t1=")){
+                tmpDatas[5] = "";
             }
         }
 
-        return dd;
+        return tmpDatas;
     }
 
-    private String[] getParse(String s) {
-        String[] src = s.split("&");
+    private String[] getParse(String value) {
+        String[] valueData = value.split("&");
         String tmp;
 
-        for(int i = 0; i < src.length; i++){
-            if(src[i].contains("ty")){
-                tmp = src[0];
-                src[0] = src[i];
-                src[i] = tmp;
+        for(int i = 0; i < valueData.length; i++){
+            if(valueData[i].contains("ty")){
+                tmp = valueData[0];
+                valueData[0] = valueData[i];
+                valueData[i] = tmp;
                 break;
             }
         }
 
-        for(int i = 1; i < src.length; i++){
-            if(src[i].contains("ti")){
-                tmp = src[1];
-                src[1] = src[i];
-                src[i] = tmp;
+        for(int i = 1; i < valueData.length; i++){
+            if(valueData[i].contains("ti")){
+                tmp = valueData[1];
+                valueData[1] = valueData[i];
+                valueData[i] = tmp;
                 break;
             }
         }
 
-        return src;
+        return valueData;
     }
 }

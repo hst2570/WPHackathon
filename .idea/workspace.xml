@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c67cad58-c7ba-4ce9-b9c8-7612ef7764ea" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/AeroTest.java" afterPath="$PROJECT_DIR$/src/test/java/AeroTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/ParseTest.java" afterPath="$PROJECT_DIR$/src/test/java/ParseTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -34,8 +34,8 @@
       <file leaf-file-name="AeroTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/AeroTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="36" column="11" lean-forward="false" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
+            <state relative-caret-position="204">
+              <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -46,11 +46,11 @@
       <file leaf-file-name="ParseTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/ParseTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="52" column="44" lean-forward="false" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
+            <state relative-caret-position="383">
+              <caret line="131" column="10" lean-forward="false" selection-start-line="131" selection-start-column="10" selection-end-line="137" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1171#1179#0" expanded="true" />
+                <element signature="e#1125#1133#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -751,10 +751,10 @@
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="JUnit.ParseTest.parse" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.AeroTest.join" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.AeroTest.setData" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.AeroTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.ParseTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.ParseTest" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.AeroTest.join" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.AeroTest.setData" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.AeroTest" />
       </list>
     </recent_temporary>
   </component>
@@ -770,20 +770,11 @@
       <updated>1481781605760</updated>
       <workItem from="1481781611991" duration="7490000" />
       <workItem from="1481849229558" duration="201000" />
-      <workItem from="1481849443286" duration="26447000" />
+      <workItem from="1481849443286" duration="27296000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="AeroTest - 2016.12.16 at 18h 39m 51s.xml">
-      <configuration name="AeroTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AeroTest_join - 2016.12.16 at 18h 40m 28s.xml">
-      <configuration name="AeroTest.join" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AeroTest_join - 2016.12.16 at 18h 40m 59s.xml">
-      <configuration name="AeroTest.join" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="AeroTest_join - 2016.12.16 at 18h 41m 10s.xml">
       <configuration name="AeroTest.join" configurationId="JUnit" />
     </history-entry>
@@ -796,18 +787,27 @@
     <history-entry file="AeroTest_join - 2016.12.16 at 18h 41m 52s.xml">
       <configuration name="AeroTest.join" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="AeroTest_setData - 2016.12.16 at 18h 40m 02s.xml">
-      <configuration name="AeroTest.setData" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ParseTest - 2016.12.16 at 18h 39m 40s.xml">
+    <history-entry file="ParseTest - 2016.12.16 at 18h 52m 36s.xml">
       <configuration name="ParseTest" configurationId="JUnit" />
     </history-entry>
     <history-entry file="ParseTest_parse - 2016.12.16 at 18h 42m 25s.xml">
       <configuration name="ParseTest.parse" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="ParseTest_parse - 2016.12.16 at 18h 52m 54s.xml">
+      <configuration name="ParseTest.parse" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ParseTest_parse - 2016.12.16 at 18h 53m 31s.xml">
+      <configuration name="ParseTest.parse" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ParseTest_parse - 2016.12.16 at 18h 55m 28s.xml">
+      <configuration name="ParseTest.parse" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ParseTest_parse - 2016.12.16 at 18h 58m 33s.xml">
+      <configuration name="ParseTest.parse" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34138000" />
+    <option name="totallyTimeSpent" value="34987000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1016,8 +1016,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/AeroTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="36" column="11" lean-forward="false" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
+        <state relative-caret-position="204">
+          <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1026,11 +1026,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/ParseTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="52" column="44" lean-forward="false" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
+        <state relative-caret-position="383">
+          <caret line="131" column="10" lean-forward="false" selection-start-line="131" selection-start-column="10" selection-end-line="137" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1171#1179#0" expanded="true" />
+            <element signature="e#1125#1133#0" expanded="true" />
           </folding>
         </state>
       </provider>
