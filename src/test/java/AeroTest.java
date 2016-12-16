@@ -27,8 +27,11 @@ import java.util.stream.Stream;
 
 public class AeroTest {
 
-    AerospikeClient client;
-    Key key;
+    private AerospikeClient client;
+    private Key key;
+
+    private Path wp = Paths.get("C:/Users/SungTae/Desktop/wp/wpc_10_10000.txt");
+    private Path home = Paths.get("/home/seong/다운로드/wpc_10_10000.txt");
 //    @Test
     public void join(){
         ClientPolicy cPolicy = new ClientPolicy();
@@ -36,7 +39,7 @@ public class AeroTest {
         this.client = new AerospikeClient(cPolicy, "10.3.10.106", 3000);
     }
 
-//    @Test
+    @Test
     public void setData() {
         this.join();
         String username = "sthwang";
@@ -52,7 +55,7 @@ public class AeroTest {
 
             key = new Key(sDbName, sTable, username);
             Bin bin1 = new Bin("username", username);
-            Bin bin2 = new Bin("password", password);
+            Bin bin2 = new Bin("password", bin1);
 
             System.out.println(key);
             System.out.println(bin1);
@@ -73,10 +76,10 @@ public class AeroTest {
 
         Policy policy = new QueryPolicy();
         key = new Key(sDbName, sTable, username);
-
+        System.out.println(key);
         Record record = client.get(policy, key);
 
-        System.out.println(record);
+        System.out.println(record.bins);
     }
 
 //    @Test
@@ -101,26 +104,29 @@ public class AeroTest {
     }
 
 //    @Test
-    public void readFile(){
-        Path path = Paths.get("/home/seong/다운로드/wpc_10_10000.txt");
-
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(String.valueOf(path)));
-            String s;
-            HashMap<String, Model> data = new HashMap<>();
-
-            while ((s = in.readLine()) != null) {
-                System.out.println(s);
-            }
-            in.close();
-        } catch (IOException e) {
-            System.err.println(e); // 에러가 있다면 메시지 출력
-            System.exit(1);
-        }
-    }
-
-    @Test
     public void testMsgPack() throws IOException {
+        // Create serialize objects.
+        BufferedReader in = new BufferedReader(new FileReader(String.valueOf(wp)));
 
+        List<String> src = new ArrayList<String>();
+
+        String s;
+        while ((s = in.readLine()) != null) {
+            src.add(s);
+        }
+
+        MessagePack msgpack = new MessagePack();
+        byte[] raw = msgpack.write(src);
+        // Serialize
+
+
+        // Deserialize directly using a template
+        List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
+
+        Iterator iterator = dst1.iterator();
+
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
     }
 }
