@@ -1,18 +1,28 @@
 import com.aerospike.client.*;
 import com.aerospike.client.policy.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by seong on 16. 12. 17.
  */
 public class ConnectAerospike {
     private AerospikeClient client;
-    String sDbName = "test";
-    String sTable = "COOKIE";
+    private String sDbName = "test";
+    private String sTable = "COOKIE";
+    private Policy policy;
+    private WritePolicy wPolicy;
+    private Key key;
+    private Bin bin;
 
     public ConnectAerospike(){
         ClientPolicy cPolicy = new ClientPolicy();
+        wPolicy = new WritePolicy();
+        policy = new QueryPolicy();
+
         cPolicy.timeout = 500;
         this.client = new AerospikeClient(cPolicy, "localhost", 3000);
     }
@@ -29,12 +39,11 @@ public class ConnectAerospike {
             case "PurchaseComplete" : type = "U_PURCHASE"; break;
         }
 
-        WritePolicy wPolicy = new WritePolicy();
         wPolicy.recordExistsAction = RecordExistsAction.UPDATE;
 
-        Key key= new Key(sDbName, sTable, oaid);
+        key= new Key(sDbName, sTable, oaid);
 
-        Bin bin = new Bin(type, raw);
+        bin = new Bin(type, raw);
 
         this.client.put(wPolicy, key, bin);
 
@@ -42,12 +51,26 @@ public class ConnectAerospike {
 
     public Record getAeroData(String oaid) {
 
-        Policy policy = new QueryPolicy();
         Key key = new Key(sDbName, sTable, oaid);
-        System.out.println(key);
         Record record = client.get(policy, key);
 
-        System.out.println(record.bins.get("username"));
         return record;
     }
+
+    public void deleteData(Set oaid){
+
+        List<String> oaidList = new ArrayList<>(oaid);
+
+        for(int i = 0 ; i < oaidList.size() ; i++){
+            Key key = new Key(sDbName, sTable, oaidList.get(i));
+            client.delete(wPolicy, key);
+        }
+
+
+    }
+
+    public void aeroClose(){
+        this.client.close();
+    }
+
 }

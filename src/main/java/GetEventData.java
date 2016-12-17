@@ -62,11 +62,11 @@ public class GetEventData {
         String tmp;
 
         for(int i = 0; i < valueData.length; i++){
-            if(valueData[i].contains("ty")){
+            if(valueData[i].contains("ty=")){
                 tmp = valueData[0];
                 valueData[0] = valueData[i];
                 valueData[i] = tmp;
-            }else if(valueData[i].contains("ti")){
+            }else if(valueData[i].contains("ti=")){
                 tmp = valueData[1];
                 valueData[1] = valueData[i];
                 valueData[i] = tmp;

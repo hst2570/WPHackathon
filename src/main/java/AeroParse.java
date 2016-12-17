@@ -1,12 +1,11 @@
+import com.aerospike.client.Record;
 import org.msgpack.MessagePack;
+import org.msgpack.template.Templates;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by seong on 16. 12. 17.
@@ -15,6 +14,7 @@ public class AeroParse {
     private List<String> data;
     private ConnectAerospike connectAerospike;
     private GetEventData getEventData;
+    private Set<String> oaid = new HashSet<>();
 
     public AeroParse(){
         connectAerospike = new ConnectAerospike();
@@ -22,53 +22,67 @@ public class AeroParse {
     }
 
     public void setAeroData() throws IOException {
+        String setType;
+        String user;
+
         MessagePack msgpack = new MessagePack();
         String EVENT_TYPE1 = "Home Login Join";
         String EVENT_TYPE2 = "Item Cart PurchaseComplete";
+
 
         for(int i = 0 ; i+2 < data.size() ; i = i + 3){
             if(data.get(i).equals("")){
                 continue;
             }
 
+            String[] homeData = getEventData.getParse(data.get(i+2));
+            setType = homeData[0].substring(3);
+            user = homeData[1].substring(3);
             byte[] raw;
-            String[] dd = getEventData.getParse(data.get(i+2));
 
-            if(EVENT_TYPE1.contains(dd[0].substring(3))){
+            if(EVENT_TYPE1.contains(setType)){
                 List<String> setEvent = new ArrayList<>();
-                setEvent.add(dd[1].substring(3) + ":" + data.get(i+1));
+                setEvent.add(user + ":" + data.get(i+1));
+                oaid.add(data.get(i));
+
                 raw = msgpack.write(setEvent);
 
-                connectAerospike.setAeroData(data.get(i), data.get(i), raw);
+                connectAerospike.setAeroData(data.get(i), homeData[0].substring(3), raw);
             }
 
-            if(EVENT_TYPE2.contains(dd[0].substring(3))){
-                String[] detail = getEventData.getDetailData(dd);
+            if(EVENT_TYPE2.contains(setType)){
+                String[] detail = getEventData.getDetailData(homeData);
 
                 if(detail[2].equals("")) continue;
+                oaid.add(data.get(i));
 
-                List<Map> setEvent2 = new ArrayList<>();
-                Map<String, Map> tmp = new HashMap<>();
-                Map<String, List> i1List = new HashMap<>();
-                List<String> il = new ArrayList<>();
+                List<String> setEvent2 = new ArrayList<>();
+                String bottom = user + ":{" + detail[2].substring(3) + ":{" +"tc:" + data.get(i+1);
 
-                il.add("tc:" + data.get(i+1));
-                if(!detail[3].equals(""))
-                    il.add("p1:" + detail[3].substring(3)); // 상품 가격
-                if(!detail[4].equals(""))
-                    il.add("q1:" + detail[4].substring(3)); // 상품 갯수
-                if(!detail[5].equals("") && !(detail[5].equals("t1="))){
-                    il.add("t1:" + detail[5].substring(3)); // 상품명
+                if(!detail[3].equals("")) {
+                    bottom = bottom + ",p1:"+detail[3].substring(3); // 상품 가격
                 }
+                if(!detail[4].equals("")) {
+                    bottom = bottom + ",q1:"+detail[4].substring(3);
+                }
+                if(!detail[5].equals("") && !(detail[5].equals("t1="))){
+                    bottom = bottom + ",t1:"+detail[5].substring(3);
+                }
+                bottom = bottom + "}}";
 
-                i1List.put(detail[2].substring(3), il); // 상품 id별 카테고리와 데이터
-                tmp.put(dd[1].substring(3), i1List); // 사용자
-                setEvent2.add(tmp);
+                setEvent2.add(bottom);
 
                 raw = msgpack.write(setEvent2);
-                connectAerospike.setAeroData(data.get(i), data.get(i), raw);
+                connectAerospike.setAeroData(data.get(i), homeData[0].substring(3), raw);
             }
+
         }
+
+        getAeroData(oaid);
+
+        connectAerospike.deleteData(oaid);
+        connectAerospike.aeroClose();
+
     }
 
     public void setData(String[] args) throws IOException {
@@ -86,4 +100,30 @@ public class AeroParse {
         }
         this.data = data;
     }
+
+    public void getAeroData(Set<String> oaid) throws IOException {
+        MessagePack msgpack = new MessagePack();
+        Record record;
+        List<String> oaidList = new ArrayList<>(oaid);
+        for(int i = 0 ; i < oaid.size() ; i++){
+            record = connectAerospike.getAeroData(oaidList.get(i));
+            if(record.bins.containsKey("U_ITEM")) {
+                byte[] raw = (byte[]) record.bins.get("U_ITEM");
+
+                if (raw != null) {
+                    List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
+
+                    Iterator iterator = dst1.iterator();
+
+                    while (iterator.hasNext()) {
+                        System.out.println(iterator.next());
+                    }
+                }
+            }
+
+
+        }
+
+    }
+
 }
