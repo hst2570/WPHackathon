@@ -37,15 +37,15 @@ public class AeroTest {
     public void join(){
         ClientPolicy cPolicy = new ClientPolicy();
         cPolicy.timeout = 500;
-        this.client = new AerospikeClient(cPolicy, "10.3.10.106", 3000);
+        this.client = new AerospikeClient(cPolicy, "localhost", 3000);
     }
 
-//    @Test
+    @Test
     public void setData() {
         this.join();
         String username = "sthwang";
         String password = "123123";
-        String sDbName = "viewer";
+        String sDbName = "test";
         String sTable = "COOKIE";
 
         if (username != null && username.length() > 0) {
@@ -62,21 +62,21 @@ public class AeroTest {
             Bin bin1 = new Bin("username", test);
             Bin bin2 = new Bin("password", password);
 
-            System.out.println(key);
-            System.out.println(bin1);
-            System.out.println(bin2);
+//            System.out.println(key);
+//            System.out.println(bin1);
+//            System.out.println(bin2);
 
             this.client.put(wPolicy, key, bin1, bin2);
         }
     }
 
-//    @Test
+    @Test
     public void getData(){
         this.join();
 
         String username = "sthwang";
         String password = "123123";
-        String sDbName = "viewer";
+        String sDbName = "test";
         String sTable = "COOKIE";
 
         Policy policy = new QueryPolicy();

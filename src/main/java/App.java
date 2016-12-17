@@ -15,6 +15,8 @@ import java.util.List;
 public class App {
 
     public static void main(String[] args) throws IOException {
-
+        AeroParse parse = new AeroParse();
+        parse.setData(args);
+        parse.setAeroData();
     }
 }
