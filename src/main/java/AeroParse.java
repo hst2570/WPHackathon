@@ -1,11 +1,13 @@
-import com.aerospike.client.Record;
 import org.msgpack.MessagePack;
-import org.msgpack.template.Templates;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by seong on 16. 12. 17.
@@ -16,8 +18,8 @@ public class AeroParse {
     private GetEventData getEventData;
     private Set<String> oaid = new HashSet<>();
 
-    public AeroParse(){
-        connectAerospike = new ConnectAerospike();
+    public AeroParse(ConnectAerospike connectAerospike){
+        this.connectAerospike = connectAerospike;
         getEventData = new GetEventData();
     }
 
@@ -29,6 +31,7 @@ public class AeroParse {
         String EVENT_TYPE1 = "Home Login Join";
         String EVENT_TYPE2 = "Item Cart PurchaseComplete";
 
+        System.out.println("Set Data");
 
         for(int i = 0 ; i+2 < data.size() ; i = i + 3){
             if(data.get(i).equals("")){
@@ -71,24 +74,20 @@ public class AeroParse {
                 bottom = bottom + "}}";
 
                 setEvent2.add(bottom);
-
                 raw = msgpack.write(setEvent2);
                 connectAerospike.setAeroData(data.get(i), homeData[0].substring(3), raw);
             }
-
         }
 
-        getAeroData(oaid);
-
-        connectAerospike.deleteData(oaid);
-        connectAerospike.aeroClose();
-
+//        connectAerospike.aeroClose();
+        System.out.println("-- Done --");
     }
 
-    public void setData(String[] args) throws IOException {
+    public void setData(Path args) throws IOException {
+//        System.out.println(args.toString());
         BufferedReader in = new BufferedReader(new FileReader(String.valueOf(args)));
 
-        List<String> data = new ArrayList<String>();
+        List<String> data = new ArrayList<>();
         String s;
 
         while((s = in.readLine()) != null){
@@ -101,29 +100,7 @@ public class AeroParse {
         this.data = data;
     }
 
-    public void getAeroData(Set<String> oaid) throws IOException {
-        MessagePack msgpack = new MessagePack();
-        Record record;
-        List<String> oaidList = new ArrayList<>(oaid);
-        for(int i = 0 ; i < oaid.size() ; i++){
-            record = connectAerospike.getAeroData(oaidList.get(i));
-            if(record.bins.containsKey("U_ITEM")) {
-                byte[] raw = (byte[]) record.bins.get("U_ITEM");
-
-                if (raw != null) {
-                    List<String> dst1 = msgpack.read(raw, Templates.tList(Templates.TString));
-
-                    Iterator iterator = dst1.iterator();
-
-                    while (iterator.hasNext()) {
-                        System.out.println(iterator.next());
-                    }
-                }
-            }
-
-
-        }
-
+    public Set<String> getOaid() {
+        return this.oaid;
     }
-
 }

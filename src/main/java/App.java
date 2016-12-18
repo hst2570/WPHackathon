@@ -3,20 +3,27 @@
  * Created by SungTae on 2016-12-15.
  */
 
-import org.msgpack.MessagePack;
-import org.msgpack.template.Templates;
-import org.msgpack.type.Value;
-import org.msgpack.unpacker.Converter;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Set;
 
 public class App {
 
     public static void main(String[] args) throws IOException {
-        AeroParse parse = new AeroParse();
-        parse.setData(args);
+        System.out.println(args.toString());
+
+        ConnectAerospike connectAerospike = new ConnectAerospike();
+        AeroParse parse = new AeroParse(connectAerospike);
+        AeroGetData aeroGetData = new AeroGetData(connectAerospike);
+
+        Set<String> oaid;
+
+        parse.setData(args); // 물어볼 것 : 아귀먼트를 파이프로 받아서 리드라인 하는 방법
         parse.setAeroData();
+
+        oaid = parse.getOaid();
+
+        aeroGetData.getAeroData(oaid);
     }
 }

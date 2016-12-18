@@ -1,8 +1,10 @@
-import com.aerospike.client.*;
+import com.aerospike.client.AerospikeClient;
+import com.aerospike.client.Bin;
+import com.aerospike.client.Key;
+import com.aerospike.client.Record;
 import com.aerospike.client.policy.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -17,9 +19,10 @@ public class ConnectAerospike {
     private WritePolicy wPolicy;
     private Key key;
     private Bin bin;
+    private ClientPolicy cPolicy;
 
     public ConnectAerospike(){
-        ClientPolicy cPolicy = new ClientPolicy();
+        cPolicy = new ClientPolicy();
         wPolicy = new WritePolicy();
         policy = new QueryPolicy();
 
@@ -40,17 +43,13 @@ public class ConnectAerospike {
         }
 
         wPolicy.recordExistsAction = RecordExistsAction.UPDATE;
-
         key= new Key(sDbName, sTable, oaid);
-
         bin = new Bin(type, raw);
 
         this.client.put(wPolicy, key, bin);
-
     }
 
     public Record getAeroData(String oaid) {
-
         Key key = new Key(sDbName, sTable, oaid);
         Record record = client.get(policy, key);
 
@@ -58,19 +57,15 @@ public class ConnectAerospike {
     }
 
     public void deleteData(Set oaid){
-
         List<String> oaidList = new ArrayList<>(oaid);
 
         for(int i = 0 ; i < oaidList.size() ; i++){
             Key key = new Key(sDbName, sTable, oaidList.get(i));
             client.delete(wPolicy, key);
         }
-
-
     }
 
     public void aeroClose(){
         this.client.close();
     }
-
 }
